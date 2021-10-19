@@ -11,7 +11,7 @@ import java.net.URI;
 import java.nio.ByteBuffer;
 
 public class ReceiveSocket {
-    private static final String TAG = "David";
+    private static final String TAG = "ReceiveSocket";
     private final SocketCallback mSocketCallback;
     MyWebSocketClient myWebSocketClient;
     private static final int PORT = 13001;

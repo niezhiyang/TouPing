@@ -39,7 +39,7 @@ public class CodecH265 extends Thread {
     public void startLive() {
 
         try {
-            //配置mediacodec的配置信息  使用DSP芯片解析
+            //配置mediacodec的配置信息 设置 为 264  使用DSP芯片解析
             MediaFormat format = MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_HEVC, WIDTH, HEIGHT);
             // 设置颜色格式
             format.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface);

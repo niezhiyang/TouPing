@@ -17,26 +17,27 @@ public class PushSocket {
     /**
      * 端口号
      */
-    int port;
-    CodecH265 mCodecH265;
-    public PushSocket(int port) {
-        this.port = port;
+    private static final int PORT = 13001;
+
+    private CodecH265 mCodecH265;
+
+    public PushSocket() {
     }
 
     public void start(MediaProjection mediaProjection) {
         webSocketServer.start();
-        mCodecH265 = new CodecH265(this,mediaProjection);
+        mCodecH265 = new CodecH265(this, mediaProjection);
         mCodecH265.startLive();
     }
 
-    private WebSocketServer webSocketServer = new WebSocketServer(new InetSocketAddress(13001)) {
+    private WebSocketServer webSocketServer = new WebSocketServer(new InetSocketAddress(PORT)) {
         @Override
         public void onOpen(WebSocket webSocket, ClientHandshake clientHandshake) {
             mWebSocket = webSocket;
         }
 
         @Override
-        public void onClose(WebSocket conn, int code, String reason, boolean remote ) {
+        public void onClose(WebSocket conn, int code, String reason, boolean remote) {
             Log.i(TAG, "onClose: 关闭 socket ");
         }
 
@@ -45,7 +46,7 @@ public class PushSocket {
         }
 
         @Override
-        public void onError(WebSocket conn, Exception e ) {
+        public void onError(WebSocket conn, Exception e) {
             Log.i(TAG, "onError:  " + e.toString());
         }
 
@@ -57,6 +58,7 @@ public class PushSocket {
 
     /**
      * 发送数据
+     *
      * @param bytes
      */
     public void sendData(byte[] bytes) {

@@ -22,7 +22,7 @@ import androidx.annotation.Nullable;
  * since 10/19/21
  */
 public class PushService extends Service {
-    private static final int PORT = 13001;
+
     /**
      * 录屏的 manger
      */
@@ -49,7 +49,7 @@ public class PushService extends Service {
         Intent data = intent.getParcelableExtra("data");
 
         MediaProjection mediaProjection = mProjectionManager.getMediaProjection(code, data);
-        mSocket = new PushSocket(PORT);
+        mSocket = new PushSocket();
         mSocket.start(mediaProjection);
 
         return super.onStartCommand(intent, flags, startId);
