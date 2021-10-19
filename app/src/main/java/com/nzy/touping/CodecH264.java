@@ -39,6 +39,7 @@ public class CodecH264 extends Thread {
     public void startLive() {
 
         try {
+            /////////////////////////////////// 这里换成MIMETYPE_VIDEO_AVC //////////////////////////////////////////////
             //配置mediacodec的配置信息 设置 为 264  使用DSP芯片解析
             MediaFormat format = MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_AVC, WIDTH, HEIGHT);
             // 设置颜色格式
@@ -49,7 +50,8 @@ public class CodecH264 extends Thread {
             format.setInteger(KEY_FRAME_RATE, 20);
             // 设置I帧的间隔
             format.setInteger(KEY_I_FRAME_INTERVAL, 1);
-            // 使用 H265 编码格式 去 编码
+            // 使用 H264 编码格式 去 编码
+            /////////////////////////////////// 这里换成MIMETYPE_VIDEO_AVC //////////////////////////////////////////////
             mMediaCodec = MediaCodec.createEncoderByType(MediaFormat.MIMETYPE_VIDEO_AVC);
             // 设置格式 要编码
             mMediaCodec.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
@@ -90,9 +92,10 @@ public class CodecH264 extends Thread {
         }
     }
 
-    public static final int NAL_I = 19;
-    public static final int NAL_VPS = 32;
-    private byte[] vps_sps_pps_buf;
+    /////////////////////////////////// 这里的算法要换 //////////////////////////////////////////////
+    public static final int NAL_I = 5;
+    public static final int NAL_VPS = 7;
+    private byte[] sps_pps_buf;
 
     /**
      * 绘制每一帧，因为录屏 只有第一帧有 sps 、pps 和 vps，所以我们需要在每一 I 帧 之前插入 sps 、pps 和 vps 的内容
@@ -105,19 +108,20 @@ public class CodecH264 extends Thread {
         if (byteBuffer.get(2) == 0x01) {
             offset = 3;
         }
-        int type = (byteBuffer.get(offset) & 0x7E) >> 1;
-        // vps_sps_pps 帧记录下来
+        /////////////////////////////////// 这里的算法要换 //////////////////////////////////////////////
+        int type = byteBuffer.get(offset) & 0x1f;
+        // sps_pps_buf 帧记录下来
         if (type == NAL_VPS) {
-            vps_sps_pps_buf = new byte[bufferInfo.size];
-            byteBuffer.get(vps_sps_pps_buf);
+            sps_pps_buf = new byte[bufferInfo.size];
+            byteBuffer.get(sps_pps_buf);
         } else if (type == NAL_I) {
             // I 帧 ，把 vps_sps_pps 帧塞到 I帧之前一起发出去
             final byte[] bytes = new byte[bufferInfo.size];
             byteBuffer.get(bytes);
 
-            byte[] newBuf = new byte[vps_sps_pps_buf.length + bytes.length];
-            System.arraycopy(vps_sps_pps_buf, 0, newBuf, 0, vps_sps_pps_buf.length);
-            System.arraycopy(bytes, 0, newBuf, vps_sps_pps_buf.length, bytes.length);
+            byte[] newBuf = new byte[sps_pps_buf.length + bytes.length];
+            System.arraycopy(sps_pps_buf, 0, newBuf, 0, sps_pps_buf.length);
+            System.arraycopy(bytes, 0, newBuf, sps_pps_buf.length, bytes.length);
             mSocket.sendData(newBuf);
             Log.v(TAG, "I帧 视频数据  " + Arrays.toString(bytes));
         } else {

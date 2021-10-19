@@ -19,15 +19,18 @@ public class PushSocket {
      */
     private static final int PORT = 13001;
 
-    private CodecH265 mCodecH265;
+//    private CodecH265 mCodecH265;
+    private CodecH264 mCodecH264;
 
     public PushSocket() {
     }
 
     public void start(MediaProjection mediaProjection) {
         webSocketServer.start();
-        mCodecH265 = new CodecH265(this, mediaProjection);
-        mCodecH265.startLive();
+//        mCodecH265 = new CodecH265(this, mediaProjection);
+//        mCodecH265.startLive();
+        mCodecH264 = new CodecH264(this, mediaProjection);
+        mCodecH264.startLive();
     }
 
     private WebSocketServer webSocketServer = new WebSocketServer(new InetSocketAddress(PORT)) {

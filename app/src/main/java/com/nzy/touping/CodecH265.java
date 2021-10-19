@@ -39,7 +39,7 @@ public class CodecH265 extends Thread {
     public void startLive() {
 
         try {
-            //配置mediacodec的配置信息 设置 为 264  使用DSP芯片解析
+            //配置mediacodec的配置信息 设置 为 265  使用DSP芯片解析
             MediaFormat format = MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_HEVC, WIDTH, HEIGHT);
             // 设置颜色格式
             format.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface);
@@ -75,11 +75,13 @@ public class CodecH265 extends Thread {
         MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
         while (true) {
             try {
+                // 去解码
                 int outputBufferId = mMediaCodec.dequeueOutputBuffer(bufferInfo, 10000);
                 if (outputBufferId >= 0) {
                     ByteBuffer byteBuffer = mMediaCodec.getOutputBuffer(outputBufferId);
                     // 拿到每一帧 如果是I帧 则在I帧前面插入 sps pps
                     dealFrame(byteBuffer, bufferInfo);
+                    // 用完之后必须释放掉
                     mMediaCodec.releaseOutputBuffer(outputBufferId, false);
                 }
             } catch (Exception e) {
