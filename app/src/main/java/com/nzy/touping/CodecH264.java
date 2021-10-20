@@ -65,6 +65,7 @@ public class CodecH264 extends Thread {
 
         } catch (IOException e) {
             e.printStackTrace();
+            // 不支持 就走软解 ，或者 没有这个视频的格式
         }
 
 

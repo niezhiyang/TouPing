@@ -63,6 +63,7 @@ public class CodecH265 extends Thread {
 
         } catch (IOException e) {
             e.printStackTrace();
+            // 不支持 就走软解
         }
 
 
