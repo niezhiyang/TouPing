@@ -25,8 +25,9 @@ public class Decode264 implements ReceiveSocket.SocketCallback {
     private void initCodec() {
         try {
             // 把 h264 解码成 yuv视频
-            ////////////////////////////////更改MIMETYPE_VIDEO_AVC//////////////////////////////////////
+            /////////////////////////////////// 如果是H265 这里换成 MIMETYPE_VIDEO_HEVC //////////////////////////////////////////////
             mMediaCodec = MediaCodec.createDecoderByType(MediaFormat.MIMETYPE_VIDEO_AVC);
+            /////////////////////////////////// 如果是H265 这里换成 MIMETYPE_VIDEO_HEVC //////////////////////////////////////////////
             final MediaFormat format = MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_AVC, 720, 1280);
             format.setInteger(MediaFormat.KEY_BIT_RATE, 720 * 1280);
             format.setInteger(MediaFormat.KEY_FRAME_RATE, 20);

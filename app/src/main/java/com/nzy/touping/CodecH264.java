@@ -39,7 +39,7 @@ public class CodecH264 extends Thread {
     public void startLive() {
 
         try {
-            /////////////////////////////////// 这里换成MIMETYPE_VIDEO_AVC //////////////////////////////////////////////
+            /////////////////////////////////// 如果是H265 这里换成 MIMETYPE_VIDEO_HEVC //////////////////////////////////////////////
             //配置mediacodec的配置信息 设置 为 264  使用DSP芯片解析
             MediaFormat format = MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_AVC, WIDTH, HEIGHT);
             // 设置颜色格式
@@ -51,7 +51,7 @@ public class CodecH264 extends Thread {
             // 设置I帧的间隔
             format.setInteger(KEY_I_FRAME_INTERVAL, 1);
             // 使用 H264 编码格式 去 编码
-            /////////////////////////////////// 这里换成MIMETYPE_VIDEO_AVC //////////////////////////////////////////////
+            /////////////////////////////////// 如果是H265 这里换成 MIMETYPE_VIDEO_HEVC //////////////////////////////////////////////
             mMediaCodec = MediaCodec.createEncoderByType(MediaFormat.MIMETYPE_VIDEO_AVC);
             // 设置格式 要编码
             mMediaCodec.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
@@ -93,8 +93,10 @@ public class CodecH264 extends Thread {
     }
 
     /////////////////////////////////// 这里的算法要换 //////////////////////////////////////////////
+    /////////////////////////////////// 如果是H265 NAL_I=19 NAL_SPS=32//////////////////////////////////////////////
+
     public static final int NAL_I = 5;
-    public static final int NAL_VPS = 7;
+    public static final int NAL_SPS = 7;
     private byte[] sps_pps_buf;
 
     /**
@@ -108,10 +110,12 @@ public class CodecH264 extends Thread {
         if (byteBuffer.get(2) == 0x01) {
             offset = 3;
         }
-        /////////////////////////////////// 这里的算法要换 //////////////////////////////////////////////
+
         int type = byteBuffer.get(offset) & 0x1f;
+        /////////////////////////////////// 如果是H265 这里type 要换 //////////////////////////////////////////////
+//        int type = (byteBuffer.get(offset) & 0x7E) >> 1;
         // sps_pps_buf 帧记录下来
-        if (type == NAL_VPS) {
+        if (type == NAL_SPS) {
             sps_pps_buf = new byte[bufferInfo.size];
             byteBuffer.get(sps_pps_buf);
         } else if (type == NAL_I) {
