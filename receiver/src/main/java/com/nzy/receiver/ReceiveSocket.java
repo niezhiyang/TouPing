@@ -15,8 +15,9 @@ public class ReceiveSocket {
     private final SocketCallback mSocketCallback;
     MyWebSocketClient myWebSocketClient;
     private static final int PORT = 13001;
-    private static final String IP = "172.16.149.72";
+    //todo 这里填写自己发送端的wifiIp
 //    private static final String IP = "172.16.149.72";
+    private static final String IP = "";
     private final Context mContext;
 
     public ReceiveSocket(Context context, SocketCallback socketCallback) {

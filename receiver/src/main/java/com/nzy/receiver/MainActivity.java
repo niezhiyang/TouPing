@@ -24,7 +24,6 @@ public class MainActivity extends AppCompatActivity  {
                 mSurface = holder.getSurface();
                 mDecode264 = new Decode264(mSurface);
                 initSocket();
-                initDecoder();
             }
             @Override
             public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
@@ -42,9 +41,5 @@ public class MainActivity extends AppCompatActivity  {
         screenLive.start();
     }
 
-    public void initDecoder() {
-
-
-    }
-
 }
+
