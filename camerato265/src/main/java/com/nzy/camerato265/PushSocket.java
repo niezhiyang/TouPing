@@ -138,6 +138,7 @@ public class PushSocket implements Camera.PreviewCallback {
             e.printStackTrace();
         }
     }
+    int frameIndex;
     public int encodeFrame(byte[] input) {
 
         // 因为摄像头的数据是 NV21，只有摄像头是这个格式，在硬件编码根本没有这个码
@@ -151,7 +152,9 @@ public class PushSocket implements Camera.PreviewCallback {
             ByteBuffer inputBuffer = mMediaCodec.getInputBuffer(inputBufferIndex);
             inputBuffer.clear();
             inputBuffer.put(mYuv420);
-            mMediaCodec.queueInputBuffer(inputBufferIndex, 0, mYuv420.length, System.currentTimeMillis(), 0);
+            long presentationTimeUs = computePresentationTime(frameIndex);
+            mMediaCodec.queueInputBuffer(inputBufferIndex, 0, mYuv420.length, 0, 0);
+            frameIndex ++;
         }
         MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
         int outputBufferIndex = mMediaCodec.dequeueOutputBuffer(bufferInfo, 100000);
@@ -164,6 +167,9 @@ public class PushSocket implements Camera.PreviewCallback {
 
         }
         return 0;
+    }
+    private long computePresentationTime(long frameIndex) {
+        return 240 + frameIndex * 1000000 / 15;
     }
     public static final int NAL_I = 19;
     public static final int NAL_VPS = 32;

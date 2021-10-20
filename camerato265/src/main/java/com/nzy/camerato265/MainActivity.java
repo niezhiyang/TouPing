@@ -2,7 +2,10 @@ package com.nzy.camerato265;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.media.MediaCodecInfo;
+import android.media.MediaCodecList;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -18,6 +21,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
     private static final int REQUEST_CODE_CAMERA = 100;
     private SurfaceHolder mSurfaceHolder;
     private PushSocket mPushSocket;
+    private static final String TAG = "MediaCodecInfo";
 
 
     @Override
@@ -26,8 +30,12 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         setContentView(R.layout.activity_main);
         SurfaceView surfaceview = findViewById(R.id.surfaceview);
         surfaceview.getHolder().addCallback(this);
+        int codecCount = MediaCodecList.getCodecCount();
+        MediaCodecInfo[] codecInfos = new MediaCodecList(1).getCodecInfos();
 
-
+        int length = codecInfos.length;
+        // 可以同时解码多个视频，但是肯定不是这么多的
+        Log.e(TAG,codecCount+"---"+codecCount);
     }
 
 

@@ -1,3 +1,4 @@
+include ':camerato265'
 include ':receiver'
 include ':app'
 rootProject.name = "TouPing"
