@@ -19,6 +19,7 @@ import java.util.Arrays;
 
 public class PushSocket implements Camera.PreviewCallback {
     private static final String TAG = "PushSocket";
+    private static final int KEY_FRAME_RATE = 15;
     private WebSocket mWebSocket;
 
     private Camera mCamera;
@@ -125,7 +126,7 @@ public class PushSocket implements Camera.PreviewCallback {
             // 因为 摄像头数据 旋转了，所以这里的宽高就会变成高宽
             MediaFormat mediaFormat = MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_HEVC, mSize.height, mSize.width);
             mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, 1080 * 1920);
-            mediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, 15);
+            mediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, KEY_FRAME_RATE);
             mediaFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Flexible);
             mediaFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 5);
             mMediaCodec.configure(mediaFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
@@ -153,7 +154,7 @@ public class PushSocket implements Camera.PreviewCallback {
             inputBuffer.clear();
             inputBuffer.put(mYuv420);
             long presentationTimeUs = computePresentationTime(frameIndex);
-            mMediaCodec.queueInputBuffer(inputBufferIndex, 0, mYuv420.length, 0, 0);
+            mMediaCodec.queueInputBuffer(inputBufferIndex, 0, mYuv420.length, presentationTimeUs, 0);
             frameIndex ++;
         }
         MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
@@ -169,7 +170,8 @@ public class PushSocket implements Camera.PreviewCallback {
         return 0;
     }
     private long computePresentationTime(long frameIndex) {
-        return 240 + frameIndex * 1000000 / 15;
+        // 这里的 15 表示一秒多少帧 200 是一个偏移 ，任何一个视频pts 都不是从0开始的
+        return 200 + frameIndex * 1000_000 / KEY_FRAME_RATE;
     }
     public static final int NAL_I = 19;
     public static final int NAL_VPS = 32;
