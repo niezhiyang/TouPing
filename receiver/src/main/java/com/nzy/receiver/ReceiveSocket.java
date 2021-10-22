@@ -28,6 +28,7 @@ public class ReceiveSocket {
         if (IP.isEmpty()) {
             Toast.makeText(mContext, "请填写发送端的wifi的IP", Toast.LENGTH_SHORT).show();
             throw new RuntimeException("请填写发送端的wifi的IP");
+
         }
         try {
             URI url = new URI("ws://"+IP+":" + PORT);
