@@ -12,7 +12,7 @@ public class MainActivity extends AppCompatActivity  {
     private Surface mSurface;
 
     private Decode264 mDecode264;
-    private Decode265 mDecode265;
+//    private Decode265 mDecode265;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,8 +23,8 @@ public class MainActivity extends AppCompatActivity  {
             @Override
             public void surfaceCreated(@NonNull SurfaceHolder holder) {
                 mSurface = holder.getSurface();
-//                mDecode264 = new Decode264(mSurface);
-                mDecode265 = new Decode265(mSurface);
+                mDecode264 = new Decode264(mSurface);
+//                mDecode265 = new Decode265(mSurface);
                 initSocket();
             }
             @Override
@@ -39,8 +39,8 @@ public class MainActivity extends AppCompatActivity  {
 
     }
     private void initSocket() {
-//        ReceiveSocket screenLive = new ReceiveSocket(this,mDecode264);
-        ReceiveSocket screenLive = new ReceiveSocket(this,mDecode265);
+        ReceiveSocket screenLive = new ReceiveSocket(this,mDecode264);
+//        ReceiveSocket screenLive = new ReceiveSocket(this,mDecode265);
         screenLive.start();
     }
 
