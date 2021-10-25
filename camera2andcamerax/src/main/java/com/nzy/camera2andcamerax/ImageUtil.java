@@ -9,7 +9,7 @@ public class ImageUtil {
         int uIndex = 0, vIndex = 0;
         for (int i = stride * height; i < length; i += 2) {
             if(i>=nv21.length){
-                return;
+                continue;
             }
             nv21[i] = v[vIndex];
             nv21[i + 1] = u[uIndex];

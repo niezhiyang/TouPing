@@ -264,9 +264,7 @@ public class Camera2Helper {
         return bestSize;
     }
 
-    public void openCamera() {
 
-    }
 
 
     public interface Camera2Listener {

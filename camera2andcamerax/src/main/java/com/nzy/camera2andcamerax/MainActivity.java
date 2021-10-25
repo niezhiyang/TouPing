@@ -132,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements TextureView.Surfa
         // 旋转，YUV420 ，就是 nv21
         ImageUtil.nv21_rotate_to_90(nv21,nv21_rotated,stride,previewSize.getHeight());
 
+        // nv12 就是 YUV420
         byte[] temp = ImageUtil.nv21toNV12(nv21_rotated, nv12);
 
         //输出成H264的码流
@@ -153,6 +154,7 @@ public class MainActivity extends AppCompatActivity implements TextureView.Surfa
             // 写在文件中 方便查看
 //            writeContent(ba);
 //            writeBytes(ba);
+
             // 发送出去
             dealFrame(byteBuffer,info);
             mediaCodec.releaseOutputBuffer(outIndex, false);
