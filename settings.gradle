@@ -1,3 +1,4 @@
+include ':rtmp'
 include ':camera2andcamerax'
 include ':camerato265'
 include ':receiver'
